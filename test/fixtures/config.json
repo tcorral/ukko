@@ -1,0 +1,16 @@
+{
+  "syde-conf": {
+    "development": {
+      "test/generated/repos/airbnb/javascript": "https://github.com/airbnb/javascript.git#483bc27a7cf7e8b358621f03ded120e2998854ca",
+      "test/generated/repos/tcorral/ddpp": "https://github.com/tcorral/Design-Patterns-in-Javascript/archive/master.zip",
+      "test/generated/repos/airbnb/javascript2": {
+        "endpoint": "https://github.com/airbnb/javascript.git#483bc27a7cf7e8b358621f03ded120e2998854ca"
+      },
+      "test/generated/repos/airbnb/javascript3": {
+        "endpoint": "https://github.com/airbnb/javascript.git#483bc27a7cf7e8b358621f03ded120e2998854ca",
+        "commands": "ls -la"
+      }
+    },
+    "production": {}
+  }
+}

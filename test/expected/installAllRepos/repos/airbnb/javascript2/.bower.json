@@ -1,0 +1,13 @@
+{
+  "name": "test__generated__repos__airbnb__javascript2",
+  "homepage": "https://github.com/airbnb/javascript",
+  "_release": "483bc27a7c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "483bc27a7cf7e8b358621f03ded120e2998854ca"
+  },
+  "_source": "https://github.com/airbnb/javascript.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/airbnb/javascript.git"
+}

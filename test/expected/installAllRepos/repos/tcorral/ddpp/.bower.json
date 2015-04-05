@@ -1,0 +1,12 @@
+{
+  "name": "master",
+  "_cacheHeaders": {
+    "ETag": "\"eebff83e789682df41277662455331de55f76117\"",
+    "Content-Type": "application/zip",
+    "Content-Disposition": "attachment; filename=Design-Patterns-in-Javascript-master.zip"
+  },
+  "_release": "e-tag:eebff83e7",
+  "_source": "https://github.com/tcorral/Design-Patterns-in-Javascript/archive/master.zip",
+  "_target": "*",
+  "_originalSource": "https://github.com/tcorral/Design-Patterns-in-Javascript/archive/master.zip"
+}

@@ -1,0 +1,16 @@
+{
+    "name": "syde",
+    "main": "index.js",
+    "version": "0.0.1",
+    "authors": [
+        "Tomas Corral <tomas@backbase.com>"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
+}
