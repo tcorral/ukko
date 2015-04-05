@@ -3,7 +3,7 @@
 var grunt = require('grunt');
 var path = require('path');
 var cwd = process.cwd();
-var syde = require('../');
+var ukko = require('../');
 var clean = function () {
     var pathBower = path.join(process.cwd(), 'bower.json');
     var bowerData = grunt.file.readJSON(pathBower);
@@ -26,9 +26,9 @@ var compareContent = function (repoPath, subFolder, test) {
     });
 };
 
-exports.syde = {
+exports.ukko = {
     installAllRepos: function (test) {
-        syde.installOrUpdate({
+        ukko.installOrUpdate({
             configPath: "test/fixtures/config.json",
             onEnd: function () {
                 var genOut, genError;
@@ -48,10 +48,10 @@ exports.syde = {
         });
     },
     updateAllRepos: function (test) {
-        syde.installOrUpdate({
+        ukko.installOrUpdate({
             configPath: "test/fixtures/config.json",
             onEnd: function () {
-                syde.installOrUpdate({
+                ukko.installOrUpdate({
                     configPath: "test/fixtures/config.json",
                     onEnd: function () {
                         var genOut, genError;
@@ -73,7 +73,7 @@ exports.syde = {
         });
     },
     installOneRepo: function (test){
-        syde.installOrUpdate({
+        ukko.installOrUpdate({
             configPath: "test/fixtures/config.json",
             repos: "test/generated/repos/airbnb/javascript",
             onEnd: function () {
@@ -86,11 +86,11 @@ exports.syde = {
         });
     },
     updateOneRepo:function (test) {
-        syde.installOrUpdate({
+        ukko.installOrUpdate({
             configPath: "test/fixtures/config.json",
             repos: "test/generated/repos/airbnb/javascript",
             onEnd: function () {
-                syde.installOrUpdate({
+                ukko.installOrUpdate({
                     configPath: "test/fixtures/config.json",
                     repos: "test/generated/repos/airbnb/javascript",
                     onEnd: function () {
