@@ -14,12 +14,14 @@ var installOrUpdate = function (config){
     var confEnvironment = utils.getConfigEnvironment(configPath);
     var lastProcess = { _process: null };
     var correctCallbacks = [];
+    var postCallbacks = [];
     var endPointKeys = utils.getRepos(repos, confEnvironment);
     require('./lib/safe-exit')(detachedProcesses, lastProcess);
     async.eachSeries(endPointKeys, function (key, callback) {
         // Execute preinstall
         Commands.execute({
             cwd: process.cwd(),
+            key: key,
             detachedProcesses: detachedProcesses,
             lastProcess: lastProcess,
             commands: Commands.getPreCommands(confEnvironment[key]),
@@ -27,6 +29,7 @@ var installOrUpdate = function (config){
                 var argumentsToBower = [];
                 var _path = path.resolve(process.cwd(), key);
                 var command;
+                var originalKey = key;
                 var settingsObj = {save: false};
                 var optionsObj = {
                     interactive: false,
@@ -46,7 +49,6 @@ var installOrUpdate = function (config){
                     key = key.replace(/\//g, '__');
                     Bower.saveToUpdate(key);
                 }
-
                 bower.commands[command].apply(bower, argumentsToBower)
                     .on('log', function (data) {
                         var log = data && data.level && console[data.level] ? console[data.level] : console.log;
@@ -64,19 +66,23 @@ var installOrUpdate = function (config){
                             return function (_callback) {
                                 utils.correctParentFolder(installed, _path, function () {
                                     Bower.cleanDependencies();
-                                    // Execute post install
-                                    Commands.execute({
-                                        cwd: process.cwd(),
-                                        detachedProcesses: detachedProcesses,
-                                        lastProcess: lastProcess,
-                                        commands: Commands.getPostCommands(confEnvironment[key]),
-                                        callback: function () {
-                                            _callback();
-                                        }
-                                    });
                                 });
+                                _callback();
                             };
                         }(installed, _path)));
+
+                        postCallbacks.push.apply(postCallbacks, (function (cwd, key) {
+                            return Commands.getCommandsCallbacks({
+                                cwd: cwd,
+                                detachedProcesses: detachedProcesses,
+                                lastProcess: lastProcess,
+                                commands: Commands.getPostCommands(confEnvironment[key]),
+                                callback: function (_callback) {
+                                    _callback();
+                                }
+                            });
+                        }(_path, originalKey)));
+
                         // Follow next step.
                         callback();
                     });
@@ -84,7 +90,9 @@ var installOrUpdate = function (config){
         });
     }, function () {
         async.series(correctCallbacks, function () {
-            onEnd();
+            async.series(postCallbacks, function (){
+                onEnd();
+            })
         });
     });
 };
