@@ -1,6 +1,6 @@
 {
   "name": "ukko",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Module to download repos and execute commands before and after install",
   "main": "index.js",
   "scripts": {
