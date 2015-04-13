@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^0.9.0",
-    "bower": "^1.4.1",
+    "bower": "https://github.com/tcorral/bower.git#47f7f5bec3a35ff938a38d79d6b27c7e6e9ca137",
     "inquirer": "^0.8.2",
     "microtime": "^1.3.0",
     "temp": "^0.8.1"
