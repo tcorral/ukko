@@ -1,17 +1,18 @@
 var bower = require('bower');
 var path = require('path');
 var async = require('async');
-var asyncHelper = require('./lib/async-helper');
 var Bower = require('./lib/bower');
 var utils = require('./lib/utils');
 var Commands = require('./lib/commands');
 
 var installOrUpdate = function (config) {
+    if(!config){
+        throw new Error('Config object is needed to make ukko work as expected. Please review your code and fix it.');
+    }
     var configPath = config.configPath;
     var repos = config.repos;
     var force = config.force;
-    var onEnd = config.onEnd || function () {
-        };
+    var onEnd = config.onEnd || function () {};
     var detachedProcesses = {processes: []};
     var confEnvironment = utils.getConfigEnvironment(configPath);
     var lastProcess = {_process: null};
@@ -115,12 +116,6 @@ var installOrUpdate = function (config) {
         });
 };
 
-
-installOrUpdate({
-    configPath: path.join(process.cwd(), process.argv[2]),
-    onEnd: function () {
-    }
-});
-//module.exports = {
-//    installOrUpdate: installOrUpdate
-//};
+module.exports = {
+    installOrUpdate: installOrUpdate
+};
