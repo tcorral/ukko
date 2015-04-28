@@ -16,8 +16,26 @@ var clean = function () {
 var compareContent = function (repoPath, subFolder, test) {
     var pathGenRepos = path.join(process.cwd(), "test", "generated", repoPath);
     var expectedRepos = path.join(process.cwd(), "test", "expected", subFolder, repoPath);
+    var excludeDirs = ['.git'];
+    var excludeFiles = ['.bower.json', 'ukko-error.log', 'ukko-output.log'];
     grunt.file.recurse( pathGenRepos, function (abspath, rootdir, subdir, filename) {
-        if(filename !== '.bower.json'){
+        var excluded = false;
+        excludeDirs.forEach(function (dir){
+            if (!excluded){
+                if(subdir && subdir.indexOf('/' + dir)){
+                    excluded = true;
+                }
+            }
+        });
+        excludeFiles.forEach(function (file){
+            if (!excluded){
+                if(filename === file){
+                    excluded = true;
+                }
+            }
+        });
+        if(!excluded){
+            console.log('ein');
             var genContent = grunt.file.read(abspath);
             var expPath = abspath.replace(pathGenRepos, expectedRepos);
             var expContent = grunt.file.read(expPath);
@@ -33,11 +51,17 @@ exports.ukko = {
             onEnd: function () {
                 var genOut, genError;
                 compareContent('repos', 'installAllRepos', test);
-                test.equal(grunt.file.exists('out.log'), true);
-                test.equal(grunt.file.exists('error.log'), true);
+                var javascript3Folder = path.join(process.cwd(), 'test',
+                                                            'generated', 'repos',
+                                                            'airbnb', 'javascript3');
+                var errorLogFilePath = path.join(javascript3Folder, 'ukko-error.log');
+                var outputLogFilePath = path.join(javascript3Folder, 'ukko-output.log');
 
-                genOut = grunt.file.read('out.log');
-                genError = grunt.file.read('error.log');
+                test.equal(grunt.file.exists(errorLogFilePath), true);
+                test.equal(grunt.file.exists(outputLogFilePath), true);
+
+                genOut = grunt.file.read(outputLogFilePath);
+                genError = grunt.file.read(errorLogFilePath);
 
                 test.equal(genOut.length > 0, true);
                 test.equal(genError.length, 0);
@@ -56,11 +80,17 @@ exports.ukko = {
                     onEnd: function () {
                         var genOut, genError;
                         compareContent('repos', 'updateAllRepos', test);
-                        test.equal(grunt.file.exists('out.log'), true);
-                        test.equal(grunt.file.exists('error.log'), true);
+                        var javascript3Folder = path.join(process.cwd(), 'test',
+                            'generated', 'repos',
+                            'airbnb', 'javascript3');
+                        var errorLogFilePath = path.join(javascript3Folder, 'ukko-error.log');
+                        var outputLogFilePath = path.join(javascript3Folder, 'ukko-output.log');
 
-                        genOut = grunt.file.read('out.log');
-                        genError = grunt.file.read('error.log');
+                        test.equal(grunt.file.exists(errorLogFilePath), true);
+                        test.equal(grunt.file.exists(outputLogFilePath), true);
+
+                        genOut = grunt.file.read(outputLogFilePath);
+                        genError = grunt.file.read(errorLogFilePath);
 
                         test.equal(genOut.length > 0, true);
                         test.equal(genError.length, 0);
@@ -78,8 +108,13 @@ exports.ukko = {
             repos: "test/generated/repos/airbnb/javascript",
             onEnd: function () {
                 compareContent('repos/airbnb/javascript', 'installOneRepo', test);
-                test.equal(grunt.file.exists('out.log'), false);
-                test.equal(grunt.file.exists('erro.log'), false);
+                var javascriptFolder = path.join(process.cwd(), 'test',
+                    'generated', 'repos',
+                    'airbnb', 'javascript');
+                var errorLogFilePath = path.join(javascriptFolder, 'ukko-error.log');
+                var outputLogFilePath = path.join(javascriptFolder, 'ukko-output.log');
+                test.equal(grunt.file.exists(outputLogFilePath), false);
+                test.equal(grunt.file.exists(errorLogFilePath), false);
                 clean();
                 test.done();
             }
@@ -95,14 +130,18 @@ exports.ukko = {
                     repos: "test/generated/repos/airbnb/javascript",
                     onEnd: function () {
                         compareContent('repos/airbnb/javascript', 'updateOneRepo', test);
-                        test.equal(grunt.file.exists('out.log'), false);
-                        test.equal(grunt.file.exists('error.log'), false);
+                        var javascriptFolder = path.join(process.cwd(), 'test',
+                            'generated', 'repos',
+                            'airbnb', 'javascript');
+                        var errorLogFilePath = path.join(javascriptFolder, 'ukko-error.log');
+                        var outputLogFilePath = path.join(javascriptFolder, 'ukko-output.log');
+                        test.equal(grunt.file.exists(outputLogFilePath), false);
+                        test.equal(grunt.file.exists(errorLogFilePath), false);
                         clean();
                         test.done();
                     }
                 });
             }
         });
-    },
-
+    }
 };
