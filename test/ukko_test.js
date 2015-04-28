@@ -45,6 +45,12 @@ var compareContent = function (repoPath, subFolder, test) {
 };
 
 exports.ukko = {
+    noConfig: function (test) {
+        test.throws(function (){
+            ukko.installOrUpdate();
+        });
+        test.done();
+    },
     installAllRepos: function (test) {
         ukko.installOrUpdate({
             configPath: "test/fixtures/config.json",
