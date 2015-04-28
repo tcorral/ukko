@@ -20,7 +20,7 @@ var installOrUpdate = function (config) {
     var postCallbacks = [];
     var endPointKeys = utils.getRepos(repos, confEnvironment);
     require('./lib/safe-exit')(detachedProcesses, lastProcess);
-    console.log('before clean cache');
+    // Clean bower cache. - avoid bower to remove .git folder.
     bower.commands.cache.clean()
         .on('log', function (data) {
             var log = data && data.level && console[data.level] ? console[data.level] : console.log;
@@ -64,7 +64,6 @@ var installOrUpdate = function (config) {
                             Bower.saveToUpdate(key);
                         }
 
-// Clean bower cache. - avoid bower to remove .git folder.
                         bower.commands[command].apply(bower, argumentsToBower)
                             .on('log', function (data) {
                                 var log = data && data.level && console[data.level] ? console[data.level] : console.log;
