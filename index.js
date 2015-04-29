@@ -4,9 +4,12 @@ var async = require('async');
 var Bower = require('./lib/bower');
 var utils = require('./lib/utils');
 var Commands = require('./lib/commands');
+var utils = require('./lib/utils');
+var validLink = require('./lib/utils/checkLink');
+var createLink = require('./lib/utils/createLink');
 
 var installOrUpdate = function (config) {
-    if(!config){
+    if (!config) {
         throw new Error('Config object is needed to make ukko work as expected. Please review your code and fix it.');
     }
     var configPath = config.configPath;
@@ -59,48 +62,61 @@ var installOrUpdate = function (config) {
                         }
                         command = Bower.getBowerCommand(key, argumentsToBower);
 
-                        if (command === 'update') {
-                            key = key.replace(/\//g, '__');
-                            Bower.saveToUpdate(key);
-                        }
+                        console.log(key, validLink(path.resolve(process.cwd(), key)));
 
-                        bower.commands[command].apply(bower, argumentsToBower)
-                            .on('log', function (data) {
-                                var log = data && data.level && console[data.level] ? console[data.level] : console.log;
-                                log(data.message);
-                            })
-                            .on('error', function () {
-                                console.warn('error', arguments);
-                            })
-                            .on('end', function (installed) {
-                                if (command === 'install') {
-                                    Bower.saveDependencies(installed, key);
-                                }
-                                Bower.cleanDependencies();
+                        // check if the symbolink link exist. If it exist then it's not needed to do anything with ukko.
+                        validLink(path.resolve(process.cwd(), key))
+                            .then(function (result) {
+                                if(result[0] === false){
+                                    if (command === 'update') {
+                                        key = key.replace(/\//g, '__');
+                                        Bower.saveToUpdate(key);
+                                    }
 
-                                correctCallbacks.push((function (installed, _path) {
-                                    return function (_callback) {
-                                        utils.correctParentFolder(installed, _path, function () {
+                                    bower.commands[command].apply(bower, argumentsToBower)
+                                        .on('log', function (data) {
+                                            var log = data && data.level && console[data.level] ? console[data.level] : console.log;
+                                            log(data.message);
+                                        })
+                                        .on('error', function () {
+                                            console.warn('error', arguments);
+                                        })
+                                        .on('end', function (installed) {
+                                            var userHome = utils.getUserHome();
+                                            if (command === 'install') {
+                                                Bower.saveDependencies(installed, key);
+                                            }
                                             Bower.cleanDependencies();
+
+                                            correctCallbacks.push((function (installed, _path) {
+                                                return function (_callback) {
+                                                    utils.correctParentFolder(installed, _path, function () {
+                                                        Bower.cleanDependencies();
+                                                    });
+                                                    _callback();
+                                                };
+                                            }(installed, _path)));
+
+                                            postCallbacks.push.apply(postCallbacks, (function (cwd, key) {
+                                                return Commands.getCommandsCallbacks({
+                                                    cwd: cwd,
+                                                    detachedProcesses: detachedProcesses,
+                                                    lastProcess: lastProcess,
+                                                    commands: Commands.getPostCommands(confEnvironment[key]),
+                                                    callback: function (_callback) {
+                                                        _callback();
+                                                    }
+                                                });
+                                            }(_path, originalKey)));
+
+                                            // If there is no link we link it as private and as global links.
+                                            console.log('Creating link src:' + originalKey + 'dest:' + path.basename(originalKey));
+                                            createLink(path.basename(originalKey), path.join(userHome, '.local', 'share', 'bower', 'links', originalKey));
+
+                                            // Follow next step.
+                                            callback();
                                         });
-                                        _callback();
-                                    };
-                                }(installed, _path)));
-
-                                postCallbacks.push.apply(postCallbacks, (function (cwd, key) {
-                                    return Commands.getCommandsCallbacks({
-                                        cwd: cwd,
-                                        detachedProcesses: detachedProcesses,
-                                        lastProcess: lastProcess,
-                                        commands: Commands.getPostCommands(confEnvironment[key]),
-                                        callback: function (_callback) {
-                                            _callback();
-                                        }
-                                    });
-                                }(_path, originalKey)));
-
-                                // Follow next step.
-                                callback();
+                                }
                             });
 
                     }
