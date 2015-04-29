@@ -35,7 +35,6 @@ var compareContent = function (repoPath, subFolder, test) {
             }
         });
         if(!excluded){
-            console.log('ein');
             var genContent = grunt.file.read(abspath);
             var expPath = abspath.replace(pathGenRepos, expectedRepos);
             var expContent = grunt.file.read(expPath);
