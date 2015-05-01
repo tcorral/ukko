@@ -4,7 +4,6 @@ var async = require('async');
 var Bower = require('./lib/bower');
 var utils = require('./lib/utils');
 var Commands = require('./lib/commands');
-var utils = require('./lib/utils');
 var validLink = require('./lib/utils/checkLink');
 var createLink = require('./lib/utils/createLink');
 
@@ -124,6 +123,10 @@ var installOrUpdate = function (config) {
             }, function () {
                 async.series(correctCallbacks, function () {
                     async.series(postCallbacks, function () {
+                        if(!utils.getSaveReportFlag(configPath)){
+                            fs.unlinkSync(path.join(cwd,'ukko-output.log'));
+                            fs.unlinkSync(path.join(cwd,'ukko-error.log'));
+                        }
                         onEnd();
                     })
                 });
