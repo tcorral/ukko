@@ -203,6 +203,23 @@ exports.ukko = {
             }
         });
     },
+    installStash: function (test) {
+        var source = "https://" + process.env.STASH_USER + ":" + process.env.STASH_PASS + "@" + process.env.STASH_SERVER + ".com/scm/lp/bloc.git";
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/bloc" : source
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/bloc"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                test.done();
+            }
+        });
+
+    },
     updateAllReposGITFS: function (test){
         ukko.installOrUpdate({
             data: {
