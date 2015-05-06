@@ -1,8 +1,0 @@
-{
-    "ukko-conf": {
-        "save-reports": true,
-        "dependencies": {},
-        "development": {},
-        "production": {}
-    }
-}

@@ -23,7 +23,7 @@ exports.ukko = {
                 }
             },
             onEnd: function () {
-                validLink(path.join(process.cwd(), '/test/generated/repos/airbnb/javascript'))
+                validLink(path.join(cwd, '/test/generated/repos/airbnb/javascript'))
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
@@ -108,7 +108,7 @@ exports.ukko = {
         ukko.installOrUpdate({
             data: {
                 "dependencies": {
-                    "test/generated/repos/tcorral/coffee" : "git@bitbucket.org:tcorral/coffeescript-syntax-definition.git"
+                    "test/generated/repos/tcorral/coffee" : "https://tcorral@bitbucket.org/tcorral/coffeescript-syntax-definition.git"
                 }
             },
             onEnd: function () {
@@ -192,13 +192,13 @@ exports.ukko = {
         ukko.installOrUpdate({
             data: {
                 "dependencies": {
-                    "test/generated/repos/tcorral/coffee" : "/Users/tomas/WebstormProjects/ukko_bb2/test/expected/coffee"
+                    "test/generated/repos/tcorral/coffee" : path.join(process.cwd(), 'test/expected/coffee')
                 }
             },
             onEnd: function () {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
                 test.ok(stats.isDirectory());
-                //grunt.file.delete('test/generated');
+                grunt.file.delete('test/generated');
                 test.done();
             }
         });
