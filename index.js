@@ -4,6 +4,7 @@ var utils = require('./lib/utils');
 var validLink = require('./lib/utils/checkLink');
 var createLink = require('./lib/utils/createLink');
 var getRepoType = require('./lib/utils/getRepoType');
+var resolvers = require('./lib/resolvers');
 
 var installOrUpdate = function (config) {
     if (!config) {
@@ -19,25 +20,15 @@ var installOrUpdate = function (config) {
     require('./lib/safe-exit')(detachedProcesses, lastProcess);
 
     async.eachSeries(endPointKeys, function (key, callback){
-        var source = path.resolve(process.cwd(), (confEnvironment[key].endpoint || confEnvironment[key]));
-        var target = path.resolve(process.cwd(), key);
-        getRepoType((confEnvironment[key].endpoint || confEnvironment[key]))
-            .then(function (resolver){
-                validLink(target)
-                    .then(function (result){
-                        console.log('source:' + source, 'target:' + target);
-                        if(result[0] === false){
-                            if(resolver.indexOf('FS') !== -1) {
-                                createLink(source, target).then(function (){
-                                    callback();
-                                });
-                            }else{
-                                callback();
-                            }
-                        }else{
-                            callback();
-                        }
-                    });
+        var decEndpoint = confEnvironment[key];
+        var source = (confEnvironment[key].endpoint || confEnvironment[key]);
+        var target = key;
+        getRepoType((confEnvironment[key].endpoint || confEnvironment[key]), decEndpoint)
+            .then(function (resolution){
+                var resolver = resolution[0];
+                var decEndpoint = { source: source, target: key };
+                new resolvers[resolver](decEndpoint)
+                    .install(callback);
             })
             .fail(function (err){
                 callback(err);
