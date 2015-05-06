@@ -133,5 +133,98 @@ exports.ukko = {
                 test.done();
             }
         });
+    },
+    installAllReposURL_ZIP: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/ddpp" : "https://github.com/tcorral/Design-Patterns-in-Javascript/archive/master.zip"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/ddpp"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                test.done();
+            }
+        });
+    },
+    installAllReposSVNFS: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/spamassassin" : "test/expected/spamassassin"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/spamassassin"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                test.done();
+            }
+        });
+    },
+    updateAllReposSVNFS: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/spamassassin" : "test/expected/spamassassin"
+                }
+            },
+            onEnd: function () {
+                ukko.installOrUpdate({
+                    data: {
+                        "dependencies": {
+                            "test/generated/repos/tcorral/spamassassin" : "test/expected/spamassassin"
+                        }
+                    },
+                    onEnd: function () {
+                        var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/spamassassin"));
+                        test.ok(stats.isDirectory());
+                        grunt.file.delete('test/generated');
+                        test.done();
+                    }
+                });
+            }
+        });
+    },
+     installAllReposGITFS: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/coffee" : "/Users/tomas/WebstormProjects/ukko_bb2/test/expected/coffee"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
+                test.ok(stats.isDirectory());
+                //grunt.file.delete('test/generated');
+                test.done();
+            }
+        });
+    },
+    updateAllReposGITFS: function (test){
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/coffee" : "test/expected/coffee"
+                }
+            },
+            onEnd: function () {
+                ukko.installOrUpdate({
+                    data: {
+                        "dependencies": {
+                            "test/generated/repos/tcorral/coffee" : "test/expected/coffee"
+                        }
+                    },
+                    onEnd: function () {
+                        var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
+                        test.ok(stats.isDirectory());
+                        grunt.file.delete('test/generated');
+                        test.done();
+                    }
+                });
+            }
+        });
     }
 };
