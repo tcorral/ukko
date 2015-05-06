@@ -20,7 +20,10 @@ var installOrUpdate = function (config) {
         mystiquex.getResolver(source, decEndpoint)
             .then(function (data) {
                 new data.resolver(data.endpoint)
-                    .install(callback);
+                    .install(function (){
+                        utils.addPathToGitIgnore(key);
+                        callback();
+                    });
             })
             .fail(function (err) {
                 callback(err);
