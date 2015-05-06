@@ -123,11 +123,11 @@ exports.ukko = {
         ukko.installOrUpdate({
             data: {
                 "dependencies": {
-                    "test/generated/repos/tcorral/coffee" : "git@bitbucket.org:tcorral/coffeescript-syntax-definition.git"
+                    "test/generated/repos/tcorral/ddpp" : "https://github.com/tcorral/Design-Patterns-in-Javascript.git"
                 }
             },
             onEnd: function () {
-                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/ddpp"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
                 test.done();
