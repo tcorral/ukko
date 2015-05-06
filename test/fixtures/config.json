@@ -1,9 +1,7 @@
 {
     "ukko-conf": {
         "save-reports": true,
-        "dependencies": {
-            "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
-        },
+        "dependencies": {},
         "development": {},
         "production": {}
     }

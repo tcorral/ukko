@@ -5,6 +5,7 @@ var validLink = require('../lib/utils/checkLink');
 var utils = require('../lib/utils');
 var path = require('path');
 var cwd = process.cwd();
+var fs = require('fs');
 var ukko = require('../');
 
 exports.ukko = {
@@ -14,9 +15,13 @@ exports.ukko = {
         });
         test.done();
     },
-    installAllRepos: function (test) {
+    installAllReposFS: function (test) {
         ukko.installOrUpdate({
-            configPath: "test/fixtures/config.json",
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                }
+            },
             onEnd: function () {
                 validLink(path.join(process.cwd(), '/test/generated/repos/airbnb/javascript'))
                     .then(function (result){
@@ -27,12 +32,20 @@ exports.ukko = {
             }
         });
     },
-    updateAllRepos: function (test) {
+    updateAllReposFS: function (test) {
         ukko.installOrUpdate({
-            configPath: "test/fixtures/config.json",
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                }
+            },
             onEnd: function () {
                 ukko.installOrUpdate({
-                    configPath: "test/fixtures/config.json",
+                    data: {
+                        "dependencies": {
+                            "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                        }
+                    },
                     onEnd: function () {
                         validLink(path.join(process.cwd(), '/test/generated/repos/airbnb/javascript'))
                             .then(function (result){
@@ -45,9 +58,13 @@ exports.ukko = {
             }
         });
     },
-    installOneRepo: function (test){
+    installOneRepoFS: function (test){
         ukko.installOrUpdate({
-            configPath: "test/fixtures/config.json",
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                }
+            },
             repos: "test/generated/repos/airbnb/javascript",
             onEnd: function () {
                 validLink(path.join(process.cwd(), '/test/generated/repos/airbnb/javascript'))
@@ -59,13 +76,21 @@ exports.ukko = {
             }
         });
     },
-    updateOneRepo:function (test) {
+    updateOneRepoFS:function (test) {
         ukko.installOrUpdate({
-            configPath: "test/fixtures/config.json",
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                }
+            },
             repos: "test/generated/repos/airbnb/javascript",
             onEnd: function () {
                 ukko.installOrUpdate({
-                    configPath: "test/fixtures/config.json",
+                    data: {
+                        "dependencies": {
+                            "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+                        }
+                    },
                     repos: "test/generated/repos/airbnb/javascript",
                     onEnd: function () {
                         validLink(path.join(process.cwd(), '/test/generated/repos/airbnb/javascript'))
@@ -76,6 +101,36 @@ exports.ukko = {
                             });
                     }
                 });
+            }
+        });
+    },
+    installAllReposGIT: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/coffee" : "git@bitbucket.org:tcorral/coffeescript-syntax-definition.git"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                test.done();
+            }
+        });
+    },
+    installAllReposGITHUB: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/coffee" : "git@bitbucket.org:tcorral/coffeescript-syntax-definition.git"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                test.done();
             }
         });
     }
