@@ -2,7 +2,8 @@
     "ukko-conf": {
         "save-reports": true,
         "dependencies": {
-            "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript"
+            "test/generated/repos/airbnb/javascript": "test/expected/installAllRepos/repos/airbnb/javascript",
+            "test/generated/repos/tcorral/ddpp" : "git@github.com:tcorral/Design-Patterns-in-Javascript.git"
         },
         "development": {},
         "production": {}

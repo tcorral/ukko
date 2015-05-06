@@ -3,6 +3,7 @@ var async = require('async');
 var utils = require('./lib/utils');
 var validLink = require('./lib/utils/checkLink');
 var createLink = require('./lib/utils/createLink');
+var getRepoType = require('./lib/utils/getRepoType');
 
 var installOrUpdate = function (config) {
     if (!config) {
@@ -20,17 +21,26 @@ var installOrUpdate = function (config) {
     async.eachSeries(endPointKeys, function (key, callback){
         var source = path.resolve(process.cwd(), (confEnvironment[key].endpoint || confEnvironment[key]));
         var target = path.resolve(process.cwd(), key);
-        validLink(target)
-            .then(function (result){
-                console.log('source:' + source, 'target:' + target);
-                if(result[0] === false){
-                    createLink(source, target).then(function (){
-                        callback();
+        getRepoType((confEnvironment[key].endpoint || confEnvironment[key]))
+            .then(function (resolver){
+                validLink(target)
+                    .then(function (result){
+                        console.log('source:' + source, 'target:' + target);
+                        if(result[0] === false){
+                            if(resolver.indexOf('FS') !== -1) {
+                                createLink(source, target).then(function (){
+                                    callback();
+                                });
+                            }else{
+                                callback();
+                            }
+                        }else{
+                            callback();
+                        }
                     });
-                }else{
-                    callback();
-                }
-
+            })
+            .fail(function (err){
+                callback(err);
             });
     }, function (err){
         if(err){
