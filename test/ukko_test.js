@@ -203,23 +203,89 @@ exports.ukko = {
             }
         });
     },
-    installStash: function (test) {
-        var source = "https://" + process.env.STASH_USER + ":" + process.env.STASH_PASS + "@" + process.env.STASH_SERVER + ".com/scm/lp/bloc.git";
+    installAndCommandsReposFS: function (test) {
         ukko.installOrUpdate({
             data: {
                 "dependencies": {
-                    "test/generated/repos/tcorral/bloc" : source
+                    "test/generated/repos/airbnb/javascript": {
+                        endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
+                        commands: [
+                            'ls -la'
+                        ]
+                    }
                 }
             },
             onEnd: function () {
-                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/bloc"));
-                test.ok(stats.isDirectory());
-                grunt.file.delete('test/generated');
-                test.done();
+                validLink(path.join(cwd, '/test/generated/repos/airbnb/javascript'))
+                    .then(function (result){
+                        test.ok(result[0] !== false);
+                        grunt.file.delete('test/generated');
+                        test.done();
+                    });
             }
         });
-
     },
+    installAndPreCommandsReposFS: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": {
+                        endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
+                        commands: {
+                            pre: ['ls -la']
+                        }
+                    }
+                }
+            },
+            onEnd: function () {
+                validLink(path.join(cwd, '/test/generated/repos/airbnb/javascript'))
+                    .then(function (result){
+                        test.ok(result[0] !== false);
+                        grunt.file.delete('test/generated');
+                        test.done();
+                    });
+            }
+        });
+    },
+    installAndPostCommandsReposFS: function (test) {
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/airbnb/javascript": {
+                        endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
+                        commands: {
+                            post: ['ls -la']
+                        }
+                    }
+                }
+            },
+            onEnd: function () {
+                validLink(path.join(cwd, '/test/generated/repos/airbnb/javascript'))
+                    .then(function (result){
+                        test.ok(result[0] !== false);
+                        grunt.file.delete('test/generated');
+                        test.done();
+                    });
+            }
+        });
+    },
+    //installStash: function (test) {
+    //    var source = "https://" + process.env.STASH_USER + ":" + process.env.STASH_PASS + "@" + process.env.STASH_SERVER + ".com/scm/lp/bloc.git";
+    //    ukko.installOrUpdate({
+    //        data: {
+    //            "dependencies": {
+    //                "test/generated/repos/tcorral/bloc" : source
+    //            }
+    //        },
+    //        onEnd: function () {
+    //            var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/bloc"));
+    //            test.ok(stats.isDirectory());
+    //            grunt.file.delete('test/generated');
+    //            test.done();
+    //        }
+    //    });
+    //
+    //},
     updateAllReposGITFS: function (test){
         ukko.installOrUpdate({
             data: {
