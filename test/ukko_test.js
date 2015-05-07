@@ -27,6 +27,7 @@ exports.ukko = {
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     });
             }
@@ -51,6 +52,7 @@ exports.ukko = {
                             .then(function (result){
                                 test.ok(result[0] !== false);
                                 grunt.file.delete('test/generated');
+                                grunt.file.delete('trunk');
                                 test.done();
                             });
                     }
@@ -71,6 +73,7 @@ exports.ukko = {
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     });
             }
@@ -97,6 +100,7 @@ exports.ukko = {
                             .then(function (result){
                                 test.ok(result[0] !== false);
                                 grunt.file.delete('test/generated');
+                                grunt.file.delete('trunk');
                                 test.done();
                             });
                     }
@@ -115,6 +119,7 @@ exports.ukko = {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
                 test.done();
             }
         });
@@ -130,6 +135,7 @@ exports.ukko = {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/ddpp"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
                 test.done();
             }
         });
@@ -145,6 +151,7 @@ exports.ukko = {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/ddpp"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
                 test.done();
             }
         });
@@ -160,6 +167,7 @@ exports.ukko = {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/spamassassin"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
                 test.done();
             }
         });
@@ -182,6 +190,7 @@ exports.ukko = {
                         var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/spamassassin"));
                         test.ok(stats.isDirectory());
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     }
                 });
@@ -199,6 +208,7 @@ exports.ukko = {
                 var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
                 test.ok(stats.isDirectory());
                 grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
                 test.done();
             }
         });
@@ -210,7 +220,8 @@ exports.ukko = {
                     "test/generated/repos/airbnb/javascript": {
                         endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
                         commands: [
-                            'ls -la'
+                            'ls -la',
+                            'cd .'
                         ]
                     }
                 }
@@ -220,6 +231,7 @@ exports.ukko = {
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     });
             }
@@ -232,7 +244,10 @@ exports.ukko = {
                     "test/generated/repos/airbnb/javascript": {
                         endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
                         commands: {
-                            pre: ['ls -la']
+                            pre: [
+                                'ls -la',
+                                'cd .'
+                            ]
                         }
                     }
                 }
@@ -242,6 +257,7 @@ exports.ukko = {
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     });
             }
@@ -254,7 +270,10 @@ exports.ukko = {
                     "test/generated/repos/airbnb/javascript": {
                         endpoint: "test/expected/installAllRepos/repos/airbnb/javascript",
                         commands: {
-                            post: ['ls -la']
+                            post: [
+                                'ls -la',
+                                'cd .'
+                            ]
                         }
                     }
                 }
@@ -264,28 +283,182 @@ exports.ukko = {
                     .then(function (result){
                         test.ok(result[0] !== false);
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     });
             }
         });
     },
-    //installStash: function (test) {
-    //    var source = "https://" + process.env.STASH_USER + ":" + process.env.STASH_PASS + "@" + process.env.STASH_SERVER + ".com/scm/lp/bloc.git";
-    //    ukko.installOrUpdate({
-    //        data: {
-    //            "dependencies": {
-    //                "test/generated/repos/tcorral/bloc" : source
-    //            }
-    //        },
-    //        onEnd: function () {
-    //            var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/bloc"));
-    //            test.ok(stats.isDirectory());
-    //            grunt.file.delete('test/generated');
-    //            test.done();
-    //        }
-    //    });
-    //
-    //},
+    installStash: function (test) {
+        var source = "https://" + process.env.STASH_USER + ":" + process.env.STASH_PASS + "@" + process.env.STASH_SERVER + ".com/scm/lp/bloc.git";
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/repos/tcorral/bloc" : source
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/bloc"));
+                test.ok(stats.isDirectory());
+                grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
+                test.done();
+            }
+        });
+
+    },
+    installAllReposStash: function (test){
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/CXP/commons" : "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/commons.git",
+                    "test/generated/CXP/foundation": "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/foundation.git",
+                    "test/generated/CXP/content": "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/content.git",
+                    "test/generated/CXP/orchestrator": "ssh://git@git@"+process.env.STASH_SERVER+".com:7999/cxp/orchestrator.git",
+                    "test/generated/CXP/portalClient": "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalclient.git",
+                    "test/generated/CXP/portalManager": "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalManager.git"
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/CXP/commons"));
+                var stats2 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/foundation"));
+                var stats3 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/content"));
+                var stats4 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/orchestrator"));
+                var stats5 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalClient"));
+                var stats6 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalManager"));
+                test.ok(stats.isDirectory());
+                test.ok(stats2.isDirectory());
+                test.ok(stats3.isDirectory());
+                test.ok(stats4.isDirectory());
+                test.ok(stats5.isDirectory());
+                test.ok(stats6.isDirectory());
+                grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
+                test.done();
+            }
+        });
+    },
+    installAllReposStashObject: function (test){
+        ukko.installOrUpdate({
+            data: {
+                "dependencies": {
+                    "test/generated/CXP/commons" : {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/commons.git"
+                    },
+                    "test/generated/CXP/foundation": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/foundation.git"
+                    },
+                    "test/generated/CXP/content": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/content.git"
+                    },
+                    "test/generated/CXP/orchestrator": {
+                        endpoint: "ssh://git@git@"+process.env.STASH_SERVER+".com:7999/cxp/orchestrator.git"
+                    },
+                    "test/generated/CXP/portalClient": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalclient.git"
+                    },
+                    "test/generated/CXP/portalManager": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalManager.git"
+                    }
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/CXP/commons"));
+                var stats2 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/foundation"));
+                var stats3 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/content"));
+                var stats4 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/orchestrator"));
+                var stats5 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalClient"));
+                var stats6 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalManager"));
+                test.ok(stats.isDirectory());
+                test.ok(stats2.isDirectory());
+                test.ok(stats3.isDirectory());
+                test.ok(stats4.isDirectory());
+                test.ok(stats5.isDirectory());
+                test.ok(stats6.isDirectory());
+                grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
+                test.done();
+            }
+        });
+    },
+    installAllReposStashObjectCommands: function (test){
+        ukko.installOrUpdate({
+            data: {
+                "detached-processes": [
+                    'mvn jetty:run',
+                    'gulp'
+                ],
+                "dependencies": {
+                    "test/generated/CXP/commons" : {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/commons.git",
+                        commands: [
+                            'cd test/generated/CXP/commons',
+                            'mvn clean install -DskipTests'
+                        ]
+                    },
+                    "test/generated/CXP/foundation": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/foundation.git",
+                        commands: [
+                            'cd test/generated/CXP/foundation',
+                            'mvn clean install -DskipTests'
+                        ]
+                    },
+                    "test/generated/CXP/content": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/content.git",
+                        commands: [
+                            'cd test/generated/CXP/content',
+                            'mvn clean install -DskipTests',
+                            'cd test/generated/CXP/content/contentservices-webapp',
+                            'mvn jetty:run'
+                        ]
+                    },
+                    "test/generated/CXP/orchestrator": {
+                        endpoint: "ssh://git@git@"+process.env.STASH_SERVER+".com:7999/cxp/orchestrator.git",
+                        commands: [
+                            'cd test/generated/CXP/orchestrator',
+                            'mvn clean install',
+                            'cd test/generated/CXP/orchestrator/orchestrator-webapp',
+                            'mvn jetty:run'
+                        ]
+                    },
+                    "test/generated/CXP/portalClient": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalclient.git",
+                        commands: [
+                            'cd test/generated/CXP/portalClient',
+                            'gulp'
+                        ]
+                    },
+                    "test/generated/CXP/portalManager": {
+                        endpoint: "ssh://git@"+process.env.STASH_SERVER+".com:7999/cxp/portalManager.git",
+                        commands: [
+                            'cd test/generated/CXP/portalManager',
+                            'mvn clean install -DskipTests',
+                            'cd test/generated/CXP/portalManager/dashboard',
+                            'mvn jetty:run',
+                            'cd .'
+                        ]
+                    }
+                }
+            },
+            onEnd: function () {
+                var stats = fs.statSync(path.join(process.cwd(), "test/generated/CXP/commons"));
+                var stats2 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/foundation"));
+                var stats3 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/content"));
+                var stats4 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/orchestrator"));
+                var stats5 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalClient"));
+                var stats6 = fs.statSync(path.join(process.cwd(), "test/generated/CXP/portalManager"));
+                test.ok(stats.isDirectory());
+                test.ok(stats2.isDirectory());
+                test.ok(stats3.isDirectory());
+                test.ok(stats4.isDirectory());
+                test.ok(stats5.isDirectory());
+                test.ok(stats6.isDirectory());
+                grunt.file.delete('test/generated');
+                grunt.file.delete('trunk');
+                test.done();
+            }
+        });
+    },
     updateAllReposGITFS: function (test){
         ukko.installOrUpdate({
             data: {
@@ -304,6 +477,7 @@ exports.ukko = {
                         var stats = fs.statSync(path.join(process.cwd(), "test/generated/repos/tcorral/coffee"));
                         test.ok(stats.isDirectory());
                         grunt.file.delete('test/generated');
+                        grunt.file.delete('trunk');
                         test.done();
                     }
                 });

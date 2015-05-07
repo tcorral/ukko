@@ -16,12 +16,21 @@ var installOrUpdate = function (config) {
     async.eachSeries(endPointKeys, function (key, callback){
         var source = (confEnvironment[key].endpoint || confEnvironment[key]);
         var decEndpoint = { source: source, target: key, commands: (confEnvironment[key].commands || {}) };
-
+        var detachedProcesses = utils.getDetachedProcesses(configPath || config.data);
+        var saveReports = utils.getSaveReportFlag(configPath || config.data);
+        var commandsLength = utils.getCommandsLength(configPath || config.data);
         mystiquex.getResolver(source, decEndpoint)
             .then(function (data) {
-                new data.resolver(data.endpoint)
+                var resolverInstance = new data.resolver(data.endpoint);
+                resolverInstance.setPrefixLog('ukko');
+                resolverInstance.setCommandsLength(commandsLength);
+                resolverInstance.setDetachedProcesses(detachedProcesses);
+                resolverInstance
                     .install(function (){
                         utils.addPathToGitIgnore(key);
+                        if(!saveReports){
+                            resolverInstance.removeReports();
+                        }
                         callback();
                     });
             })
