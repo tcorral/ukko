@@ -1,6 +1,6 @@
 {
   "name": "ukko",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Module to download repos and execute commands before and after install",
   "main": "index.js",
   "scripts": {
@@ -11,9 +11,14 @@
   "dependencies": {
     "async": "^0.9.0",
     "graceful-fs": "^3.0.6",
-    "mystiquex": "^0.0.10",
+    "mystiquex": "^0.0.14",
     "q": "^1.3.0",
     "temp": "^0.8.1"
+  },
+  "ukko-conf": {
+    "dependencies": {
+      "test/generated/repos/tcorral/ddpp": "https://github.com/tcorral/Design-Patterns-in-Javascript.git"
+    }
   },
   "devDependencies": {
     "grunt": "^0.4.5",
