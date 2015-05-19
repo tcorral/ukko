@@ -12,47 +12,53 @@ var installOrUpdate = function (config) {
     }
     var repos = config.repos;
     var onEnd = config.onEnd || function () {};
-    var confEnvironment = utils.getConfigEnvironment(utils.getConfig(config));
-    var endPointKeys = utils.getRepos(repos, confEnvironment);
+    utils.getConfigEnvironment(utils.getConfig(config))
+        .then(function (confEnvironment){
+            var endPointKeys = utils.getRepos(repos, confEnvironment);
 
-    if (!confEnvironment || endPointKeys.length === 0) {
-        console.log(errors.wrongConfig);
-        throw new Error(errors.wrongConfig);
-    }
+            if (!confEnvironment || endPointKeys.length === 0) {
+                console.log(errors.wrongConfig);
+                throw new Error(errors.wrongConfig);
+            }
 
-    async.eachSeries(endPointKeys, function (key, callback){
-        console.log('Checking ' + key + ' endpoint');
-        var source = (confEnvironment[key].endpoint || confEnvironment[key]);
-        var decEndpoint = { source: source, target: key, commands: (confEnvironment[key].commands || {}), "testAuth": confEnvironment[key].testAuth };
-        var detachedProcesses = utils.getDetachedProcesses(utils.getConfig(config));
-        var saveReports = utils.getSaveReportFlag(utils.getConfig(config));
-        var commandsLength = utils.getCommandsLength(utils.getConfig(config));
-        var target = path.resolve(process.cwd(), key);
-        mystiquex.getResolver(source, decEndpoint)
-            .then(function (data) {
-                var resolverInstance = new data.resolver(data.endpoint);
-                resolverInstance.setPrefixLog('ukko');
-                resolverInstance.setCommandsLength(commandsLength);
-                resolverInstance.setDetachedProcesses(detachedProcesses);
-                resolverInstance
-                    .install(function (){
-                        utils.addPathToGitIgnore(key);
-                        if(!saveReports){
-                            resolverInstance.removeReports();
-                        }
-                        callback();
+            async.eachSeries(endPointKeys, function (key, callback){
+                console.log('Checking ' + key + ' endpoint');
+                var source = (confEnvironment[key].endpoint || confEnvironment[key]);
+                var decEndpoint = { source: source, target: key, commands: (confEnvironment[key].commands || {}), "testAuth": confEnvironment[key].testAuth };
+                utils.getDetachedProcesses(utils.getConfig(config))
+                    .then(function (detachedProcesses){
+                        utils.getSaveReportFlag(utils.getConfig(config))
+                            .then(function (saveReports) {
+                                utils.getCommandsLength(utils.getConfig(config))
+                                    .then(function (commandsLength) {
+                                        mystiquex.getResolver(source, decEndpoint)
+                                            .then(function (data) {
+                                                var resolverInstance = new data.resolver(data.endpoint);
+                                                resolverInstance.setPrefixLog('ukko');
+                                                resolverInstance.setCommandsLength(commandsLength);
+                                                resolverInstance.setDetachedProcesses(detachedProcesses);
+                                                resolverInstance
+                                                    .install(function (){
+                                                        utils.addPathToGitIgnore(key);
+                                                        if(!saveReports){
+                                                            resolverInstance.removeReports();
+                                                        }
+                                                        callback();
+                                                    });
+                                            })
+                                            .fail(function (err) {
+                                                callback(err);
+                                            });
+                                    });
+                            });
                     });
-            })
-            .fail(function (err) {
-                callback(err);
+            }, function (err){
+                if(err){
+                    throw err;
+                }
+                onEnd();
             });
-
-    }, function (err){
-        if(err){
-            throw err;
-        }
-        onEnd();
-    });
+        });
 };
 
 module.exports = {
