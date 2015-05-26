@@ -378,7 +378,7 @@ npm test
 
 ## History
 
-0.0.12 - First working commit.
+0.0.32 - First fully working commit.
 
 ## License
 
