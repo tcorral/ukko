@@ -156,7 +156,7 @@ file it will fallback to read the config from the package.json.
 
 ```json
 {
-    "configPath": 'path/to/your/ukko-conf.json'
+    "configPath": "path/to/your/ukko-conf.json"
 }
 ``` 
 
@@ -166,7 +166,7 @@ Remote URL can be an http/https/ftp
 
 ```json
 {
-    "configPath": 'http://path/to/your/ukko-conf.json'
+    "configPath": "http://path/to/your/ukko-conf.json"
 }
 ```
 
@@ -182,7 +182,7 @@ folders or keys.
 
 ```json
 {
-    "configPath": 'http://path/to/your/ukko-conf.json',
+    "configPath": "http://path/to/your/ukko-conf.json",
     "repos": [ "target/folder/path/from/the/root" ]
 }
 ```
@@ -200,7 +200,7 @@ you can need to execute some server or watching process.
 
 ```json
 {
-    "configPath": 'http://path/to/your/ukko-conf.json',
+    "configPath": "http://path/to/your/ukko-conf.json",
     "detached": [ "mvn jetty:run" ]
 }
 ```
