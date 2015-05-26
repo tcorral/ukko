@@ -105,7 +105,7 @@ JSON objects:
 }
 ```     
      
-##### Custom environment dependencies by default
+##### Custom environment dependencies
 
 ```json
 {
