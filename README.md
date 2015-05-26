@@ -67,7 +67,7 @@ JSON objects:
 
 ```json
 {
-    ukko-conf: {
+    "ukko-conf": {
         "dependencies": {
             "target/folder/path/from/the/root": "path/or/url/to/repo"
         }
